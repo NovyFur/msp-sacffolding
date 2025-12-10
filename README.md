@@ -15,9 +15,10 @@ Add Backend block to main.tf.j2
 
 terraform {
   backend "azurerm" {
-    resource_group_name  = "MSP-CORE-RG"
-    storage_account_name = "mspterraformstate"
+    resource_group_name  = "RG-MSP-INTERNAL-TOOLS"  # Your MSP's RG
+    storage_account_name = "stgmspterraform"        # Your MSP's Storage Account
     container_name       = "tfstate"
-    key                  = "{{ client_name }}.network.tfstate"
+    key                  = "{{ client_name }}.azure-network.tfstate" # Unique file per client
+    use_azuread_auth     = true                     # Secure access
   }
 }
