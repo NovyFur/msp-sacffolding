@@ -22,3 +22,19 @@ terraform {
     use_azuread_auth     = true                     # Secure access
   }
 }
+
+
+HOW TO COMPILE FOR NON-PYTHON USERS:
+
+Install PyInstaller:
+
+pip install pyinstaller
+
+
+Build the executable:
+
+pyinstaller --onefile --name msp-tool src/main.py
+
+
+
+(Note: You will need to configure PyInstaller to include your templates/ folder, as it doesn't pick up non-code files by default. You can do this by adding --add-data "templates;templates" to the command).
