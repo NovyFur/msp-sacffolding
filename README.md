@@ -1,16 +1,3 @@
-Summary Checklist
-Before you launch this to the team, ensure you have:
-
-[ ] Prerequisites Installed: Validated that terraform and az cli are in the system PATH.
-
-[ ] Safety Check: Implemented the subscription ID confirmation.
-
-[ ] Central Storage: Created the Azure Storage Account for remote state files.
-
-[ ] Documentation: Added a README.md to the tool itself explaining how to use msp-tool new-network.
-
-
-
 
 Install the libraries:
 pip install -r requirements.txt
