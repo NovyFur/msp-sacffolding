@@ -1,6 +1,7 @@
 import os
 import subprocess
 import click
+import json
 
 def run_command(command, cwd):
     """Runs a shell command and prints the output in real-time."""
@@ -36,11 +37,24 @@ def deploy_terraform(project_path):
     
     click.secho("\n--- 🚀 STARTING AZURE DEPLOYMENT ---", fg="yellow", bold=True)
     
-    # 1. Check if user is logged in to Azure
-    click.echo("Checking Azure authentication...")
-    # This runs 'az account show' to see if we have an active session
-    if not run_command("az account show", cwd=project_path):
-        click.secho("⚠️ You are not logged in. Please run 'az login' and try again.", fg="red")
+    # 1. Check Azure Context
+    click.echo("Checking Azure Context...")
+    # Get details in JSON format to parse safely
+    result = subprocess.run("az account show -o json", shell=True, stdout=subprocess.PIPE, text=True)
+    
+    if result.returncode != 0:
+        click.secho("❌ Not logged in. Run 'az login'.", fg="red")
+        return
+
+    account_info = json.loads(result.stdout)
+    current_sub = account_info.get("name")
+    current_sub_id = account_info.get("id")
+    
+    click.secho(f"\n⚠️  WARNING: You are deploying to: {current_sub}", fg="yellow", bold=True)
+    click.echo(f"   ID: {current_sub_id}")
+    
+    if not click.confirm("Is this the correct Client Subscription?"):
+        click.secho("❌ Aborted. Please switch subscriptions using 'az account set --subscription <ID>'", fg="red")
         return
 
     # 2. Terraform Init (Downloads the Azure providers)
